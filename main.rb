@@ -6,6 +6,13 @@ set :database, 'postgres://localhost/deal_a_day'
 DB = PG.connect({:dbname => 'deal_a_day'})
 
 class Detail < ActiveRecord::Base
+  def self.total_revenue
+    total = 0
+    Detail.all.each do |d|
+      total += d.price * d.amount
+    end
+    total
+  end
 end
 
 get '/' do
@@ -20,5 +27,5 @@ post '/' do
   file_name = File.absolute_path('uploads/' + params['upload'][:filename]) 
   DB.exec("COPY details(purchaser_name, description, price, amount, address, merchant_name) FROM '#{file_name}' WITH CSV HEADER DELIMITER AS ',';")
   
-  return "Your file was successfully uploaded!"
+  return "The total amount of revenue is #{Detail.total_revenue}. Lookin' good!"
 end
