@@ -1,9 +1,9 @@
 require 'pg'
 require 'sinatra'
 require 'sinatra/activerecord'
-require 'json'
 
 set :database, 'postgres://localhost/deal_a_day'
+DB = PG.connect({:dbname => 'deal_a_day'})
 
 class Detail < ActiveRecord::Base
 end
@@ -16,5 +16,9 @@ post '/' do
   File.open('uploads/' + params['upload'][:filename], "w") do |f|
     f.write(params['upload'][:tempfile].read)
   end
-  return "Your data was successfully uploaded!"
+
+  file_name = File.absolute_path('uploads/' + params['upload'][:filename]) 
+  DB.exec("COPY details(purchaser_name, description, price, amount, address, merchant_name) FROM '#{file_name}' WITH CSV HEADER DELIMITER AS ',';")
+  
+  return "Your file was successfully uploaded!"
 end
