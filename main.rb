@@ -8,10 +8,22 @@ DB = PG.connect({:dbname => 'deal_a_day'})
 enable :sessions
 
 class Detail < ActiveRecord::Base
-  def self.total_revenue
+  def self.upload(file)
+    File.open('uploads/' + file[:filename], "w") do |f|
+      f.write(file[:tempfile].read)
+    end
+    file_name = File.absolute_path('uploads/' + file[:filename]) 
+    DB.exec("COPY details(purchaser_name, description, price, amount, address, merchant_name) FROM '#{file_name}' WITH CSV HEADER DELIMITER AS ',';")
+    DB.exec("UPDATE details SET created_at = NOW() WHERE created_at IS NULL;")
+  end
+  
+  def self.latest_upload_revenue
     total = 0
+    latest_upload = Detail.order('created_at').last
     Detail.all.each do |d|
-      total += d.price * d.amount
+      if d.created_at == latest_upload.created_at
+        total += d.price * d.amount
+      end
     end
     total
   end
@@ -22,13 +34,9 @@ get '/' do
 end
 
 post '/' do
-  if params[:upload]
-    File.open('uploads/' + params['upload'][:filename], "w") do |f|
-      f.write(params['upload'][:tempfile].read)
-    end
-    file_name = File.absolute_path('uploads/' + params['upload'][:filename]) 
-    upload = DB.exec("COPY details(purchaser_name, description, price, amount, address, merchant_name) FROM '#{file_name}' WITH CSV HEADER DELIMITER AS ',';")
-    flash[:success] = "The total amount of revenue is $#{Detail.total_revenue}0. Lookin' good!"
+  if params['upload']
+    Detail.upload(params['upload'])
+    flash[:success] = "The total amount of revenue is $#{Detail.latest_upload_revenue}0. Lookin' good!"
   else
     flash[:error] = "You did not select a file to upload."
   end
