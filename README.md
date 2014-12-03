@@ -1,5 +1,7 @@
 Renewable Funding: Code Challenge
 =================================
+Josie Wright Edition
+====================
 
 ##Tools
 Ruby 2.1.2<br />
@@ -41,7 +43,9 @@ $ rspec
 
 ##Login
 
-Logging in and out of application is straightforward. To login, click the `Login` link and submit your information into the form. To logout, click the `Logout` link. Registration and verification are not included. I simplified the login process to only forbid file uploads from unlogged users.
+Logging in and out of application is straightforward. To login, click the `Login` link and submit your information into the form. To logout, click the `Logout` link. Registration and verification are not included. 
+
+I simplified the login process to only forbid file uploads from unlogged users.
 
 ##License
 MIT
