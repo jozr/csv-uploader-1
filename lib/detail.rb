@@ -1,4 +1,5 @@
 require 'pg'
+require 'sinatra/activerecord'
 
 class Detail < ActiveRecord::Base
 
@@ -23,5 +24,4 @@ class Detail < ActiveRecord::Base
     end
     total
   end
-
 end
