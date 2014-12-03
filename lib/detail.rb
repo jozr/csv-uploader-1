@@ -21,6 +21,7 @@ class Detail < ActiveRecord::Base
     file_name = File.absolute_path('uploads/' + file[:filename]) 
     DB.exec("COPY details(purchaser_name, description, price, amount, address, merchant_name) FROM '#{file_name}' WITH CSV HEADER DELIMITER AS ',';")
     DB.exec("UPDATE details SET created_at = NOW() WHERE created_at IS NULL;")
+    DB.exec("UPDATE details SET user_id = #{@@current_user_id} WHERE user_id IS NULL;")
   end
 
   def self.latest_upload_revenue
