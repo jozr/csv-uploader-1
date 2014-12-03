@@ -33,10 +33,15 @@ end
 
 post '/auth/login' do
   input = params['user']
-  user = User.create(email: input['email'], password: input['password'])
-  @@current_user_id = user.id
-  flash[:success] = 'You have successfully logged in!'
-  redirect '/'
+  user = User.new(email: input['email'], password: input['password'])
+  if user.save
+    @@current_user_id = user.id
+    flash[:success] = 'You have successfully logged in!'
+    redirect '/'
+  else
+  	flash[:error] = 'You left the field(s) blank.'
+  	redirect '/auth/login'
+  end
 end
 
 get '/auth/logout' do
