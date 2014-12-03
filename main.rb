@@ -13,11 +13,15 @@ end
 
 post '/' do
   link = "<a href=\"/\">Again?</a>"
-  if params['upload']
-    Detail.upload(params['upload'])
-    flash[:success] = "The total amount of revenue is $#{Detail.latest_upload_revenue}0. Lookin' good!<br />#{link}"    
-  else
-    flash[:error] = "You did not select a file to upload.<br />#{link}"
+  if @@current_user_id.nil?
+  	flash[:error] = 'You must login to upload a file.'
+  else 
+  	if params['upload']
+      Detail.upload(params['upload'])
+      flash[:success] = "The total amount of revenue is $#{Detail.latest_upload_revenue}0. Lookin' good!<br />#{link}"    
+    else
+      flash[:error] = "You did not select a file to upload.<br />#{link}"
+    end
   end
 end
 
@@ -35,7 +39,7 @@ end
 
 get '/auth/logout' do
   if @@current_user_id.nil?
-    flash[:success] = 'Nobody is logged in!'
+    flash[:error] = 'Nobody is logged in!'
   else
   	@@current_user_id = nil
     flash[:success] = 'You have successfully logged out!'
