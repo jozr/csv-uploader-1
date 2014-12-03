@@ -1,12 +1,5 @@
-require 'rack/test'
+require './main'
+require 'shoulda-matchers'
+require 'capybara/rspec'
 
-Dir.glob('./lib/*.rb').each { |f| require f }
-
-ENV['RACK_ENV'] = 'test'
-
-module RSpecMixin
-  include Rack::Test::Methods
-  def app() Sinatra::Application end
-end
-
-RSpec.configure { |c| c.include RSpecMixin }
+Capybara.app = Sinatra::Application

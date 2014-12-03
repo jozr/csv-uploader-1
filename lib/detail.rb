@@ -5,6 +5,13 @@ class Detail < ActiveRecord::Base
 
   DB = PG.connect({:dbname => 'deal_a_day'})
 
+  validates :purchaser_name, :presence => true
+  validates :description, :presence => true
+  validates :price, :presence => true
+  validates :amount, :presence => true
+  validates :address, :presence => true
+  validates :merchant_name, :presence => true
+
   def self.upload(file)
     File.open('uploads/' + file[:filename], "w") do |f|
       f.write(file[:tempfile].read)
