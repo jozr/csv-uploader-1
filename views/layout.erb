@@ -6,6 +6,16 @@
 <body>
   <p><a href="/auth/login">Log In</a> | <a href="/auth/logout">Log Out</a></p>
   <h1>Dr. Deal-a-Day</h1> 
+  <% if flash[:success] %>
+    <div style="color:green;">
+      <%= flash[:success] %>
+    </div>
+  <% end %>
+  <% if flash[:error] %>
+    <div style="color:red;">
+      <%= flash[:error] %>
+    </div>
+  <% end %>
   <%= yield %>
 </body>
 </html>

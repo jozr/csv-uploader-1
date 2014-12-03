@@ -11,6 +11,8 @@ class Detail < ActiveRecord::Base
   validates :amount, :presence => true
   validates :address, :presence => true
   validates :merchant_name, :presence => true
+  validates :user_id, :presence => true
+  belongs_to :user
 
   def self.upload(file)
     File.open('uploads/' + file[:filename], "w") do |f|

@@ -6,6 +6,7 @@ Dir.glob('./lib/*.rb').each { |f| require f }
 
 set :database, 'postgres://localhost/deal_a_day'
 enable :sessions
+@@current_user_id = nil
  
 get '/' do
   erb :index
@@ -18,11 +19,12 @@ post '/' do
   else 
   	if params['upload']
       Detail.upload(params['upload'])
-      flash[:success] = "The total amount of revenue is $#{Detail.latest_upload_revenue}0. Lookin' good!<br />#{link}"    
+      flash[:success] = "The total amount of revenue is $#{Detail.latest_upload_revenue}0. Lookin' good!"    
     else
-      flash[:error] = "You did not select a file to upload.<br />#{link}"
+      flash[:error] = "You did not select a file to upload."
     end
   end
+  redirect '/'
 end
 
 get '/auth/login' do
@@ -34,7 +36,7 @@ post '/auth/login' do
   user = User.create(email: input['email'], password: input['password'])
   @@current_user_id = user.id
   flash[:success] = 'You have successfully logged in!'
-  redirect('/')
+  redirect '/'
 end
 
 get '/auth/logout' do
