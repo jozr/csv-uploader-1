@@ -1,0 +1,31 @@
+From 7cf85619ce225621972a99cab844ba7db6a4971b Mon Sep 17 00:00:00 2001
+From: jozwright <jozwright@gmail.com>
+Date: Tue, 2 Dec 2014 21:03:18 -0800
+Subject: [PATCH 14/23] link to homepage after sumbit
+
+---
+ main.rb | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/main.rb b/main.rb
+index 62b0ea2..97a3c06 100644
+--- a/main.rb
++++ b/main.rb
+@@ -12,10 +12,11 @@ get '/' do
+ end
+ 
+ post '/' do
++  link = "<a href=\"/\">Again?</a>"
+   if params['upload']
+     Detail.upload(params['upload'])
+-    flash[:success] = "The total amount of revenue is $#{Detail.latest_upload_revenue}0. Lookin' good!"
++    flash[:success] = "The total amount of revenue is $#{Detail.latest_upload_revenue}0. Lookin' good!<br />#{link}"    
+   else
+-    flash[:error] = "You did not select a file to upload."
++    flash[:error] = "You did not select a file to upload.<br />#{link}"
+   end
+ end
+\ No newline at end of file
+-- 
+1.8.4
+

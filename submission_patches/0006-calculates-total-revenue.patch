@@ -1,0 +1,38 @@
+From 4f779805dd8ef3e86128541d8f7bef3faab987dd Mon Sep 17 00:00:00 2001
+From: jozwright <jozwright@gmail.com>
+Date: Mon, 1 Dec 2014 15:45:37 -0800
+Subject: [PATCH 06/23] calculates total revenue
+
+---
+ main.rb | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/main.rb b/main.rb
+index 951e08f..270589e 100644
+--- a/main.rb
++++ b/main.rb
+@@ -6,6 +6,13 @@ set :database, 'postgres://localhost/deal_a_day'
+ DB = PG.connect({:dbname => 'deal_a_day'})
+ 
+ class Detail < ActiveRecord::Base
++  def self.total_revenue
++    total = 0
++    Detail.all.each do |d|
++      total += d.price * d.amount
++    end
++    total
++  end
+ end
+ 
+ get '/' do
+@@ -20,5 +27,5 @@ post '/' do
+   file_name = File.absolute_path('uploads/' + params['upload'][:filename]) 
+   DB.exec("COPY details(purchaser_name, description, price, amount, address, merchant_name) FROM '#{file_name}' WITH CSV HEADER DELIMITER AS ',';")
+   
+-  return "Your file was successfully uploaded!"
++  return "The total amount of revenue is #{Detail.total_revenue}. Lookin' good!"
+ end
+\ No newline at end of file
+-- 
+1.8.4
+

@@ -1,0 +1,36 @@
+From 1706c2591f134fd8e94342ac210b97b88f572c01 Mon Sep 17 00:00:00 2001
+From: jozwright <jozwright@gmail.com>
+Date: Wed, 3 Dec 2014 09:37:32 -0800
+Subject: [PATCH 21/23] validate login
+
+---
+ main.rb | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/main.rb b/main.rb
+index bd02e64..9890cee 100644
+--- a/main.rb
++++ b/main.rb
+@@ -33,10 +33,15 @@ end
+ 
+ post '/auth/login' do
+   input = params['user']
+-  user = User.create(email: input['email'], password: input['password'])
+-  @@current_user_id = user.id
+-  flash[:success] = 'You have successfully logged in!'
+-  redirect '/'
++  user = User.new(email: input['email'], password: input['password'])
++  if user.save
++    @@current_user_id = user.id
++    flash[:success] = 'You have successfully logged in!'
++    redirect '/'
++  else
++  	flash[:error] = 'You left the field(s) blank.'
++  	redirect '/auth/login'
++  end
+ end
+ 
+ get '/auth/logout' do
+-- 
+1.8.4
+

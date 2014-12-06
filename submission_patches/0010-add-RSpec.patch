@@ -1,0 +1,49 @@
+From 94d4f457cbf0b4640c53e5bd7d0e956728c2207d Mon Sep 17 00:00:00 2001
+From: jozwright <jozwright@gmail.com>
+Date: Tue, 2 Dec 2014 19:31:22 -0800
+Subject: [PATCH 10/23] add RSpec
+
+---
+ lib/detail.rb       |  2 +-
+ spec/spec_helper.rb | 12 ++++++++++++
+ 2 files changed, 13 insertions(+), 1 deletion(-)
+ create mode 100644 spec/spec_helper.rb
+
+diff --git a/lib/detail.rb b/lib/detail.rb
+index bb3b196..afd72e6 100644
+--- a/lib/detail.rb
++++ b/lib/detail.rb
+@@ -1,4 +1,5 @@
+ require 'pg'
++require 'sinatra/activerecord'
+ 
+ class Detail < ActiveRecord::Base
+ 
+@@ -23,5 +24,4 @@ class Detail < ActiveRecord::Base
+     end
+     total
+   end
+-
+ end
+\ No newline at end of file
+diff --git a/spec/spec_helper.rb b/spec/spec_helper.rb
+new file mode 100644
+index 0000000..3159816
+--- /dev/null
++++ b/spec/spec_helper.rb
+@@ -0,0 +1,12 @@
++require 'rack/test'
++
++Dir.glob('./lib/*.rb').each { |f| require f }
++
++ENV['RACK_ENV'] = 'test'
++
++module RSpecMixin
++  include Rack::Test::Methods
++  def app() Sinatra::Application end
++end
++
++RSpec.configure { |c| c.include RSpecMixin }
+-- 
+1.8.4
+

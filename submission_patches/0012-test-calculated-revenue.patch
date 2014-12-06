@@ -1,0 +1,35 @@
+From 6ff2f35c935119a83f6e2c6a752970493b56a6cc Mon Sep 17 00:00:00 2001
+From: jozwright <jozwright@gmail.com>
+Date: Tue, 2 Dec 2014 20:23:23 -0800
+Subject: [PATCH 12/23] test calculated revenue
+
+---
+ spec/main_spec.rb | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/spec/main_spec.rb b/spec/main_spec.rb
+index fa2dc09..ba43e1c 100644
+--- a/spec/main_spec.rb
++++ b/spec/main_spec.rb
+@@ -8,5 +8,16 @@ describe Detail do
+   it { should validate_presence_of :amount }
+   it { should validate_presence_of :address }
+   it { should validate_presence_of :merchant_name }
+-  
++
++  it 'should calculate the total revenue from latest creation' do
++	@test = Detail.create(purchaser_name: 'David Bowie', 
++			  			  description: 'foam moon', 
++			  			  price: 100,
++			  			  amount: 2,
++			  			  address: '123 Main St.',
++			  			  merchant_name: 'The Labyrinth',
++			  			  created_at: Time.now)
++  	expect(Detail.latest_upload_revenue).to eql 200.0
++  	@test.delete
++  end
+ end
+\ No newline at end of file
+-- 
+1.8.4
+

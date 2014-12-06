@@ -1,0 +1,138 @@
+From 913e724dc3830ec4e7f0938551b1c19cd72b7dec Mon Sep 17 00:00:00 2001
+From: jozwright <jozwright@gmail.com>
+Date: Tue, 2 Dec 2014 20:05:20 -0800
+Subject: [PATCH 11/23] validates presence of .csv file attributes
+
+---
+ Gemfile             |  4 +++-
+ Gemfile.lock        | 18 ++++++++++++++++++
+ lib/detail.rb       |  7 +++++++
+ spec/main_spec.rb   | 12 ++++++++++++
+ spec/spec_helper.rb | 15 ++++-----------
+ 5 files changed, 44 insertions(+), 12 deletions(-)
+ create mode 100644 spec/main_spec.rb
+
+diff --git a/Gemfile b/Gemfile
+index e4745ce..984a8e2 100644
+--- a/Gemfile
++++ b/Gemfile
+@@ -3,4 +3,6 @@ source 'https://rubygems.org'
+ gem 'activerecord'
+ gem 'sinatra'
+ gem 'sinatra-flash'
+-gem 'sinatra-activerecord'
+\ No newline at end of file
++gem 'sinatra-activerecord'
++gem 'capybara'
++gem 'shoulda-matchers'
+\ No newline at end of file
+diff --git a/Gemfile.lock b/Gemfile.lock
+index 36a5736..9fcda73 100644
+--- a/Gemfile.lock
++++ b/Gemfile.lock
+@@ -16,12 +16,26 @@ GEM
+       tzinfo (~> 1.1)
+     arel (5.0.1.20140414130214)
+     builder (3.2.2)
++    capybara (2.4.1)
++      mime-types (>= 1.16)
++      nokogiri (>= 1.3.3)
++      rack (>= 1.0.0)
++      rack-test (>= 0.5.4)
++      xpath (~> 2.0)
+     i18n (0.6.11)
+     json (1.8.1)
++    mime-types (2.4.3)
++    mini_portile (0.6.0)
+     minitest (5.4.3)
++    nokogiri (1.6.3.1)
++      mini_portile (= 0.6.0)
+     rack (1.5.2)
+     rack-protection (1.5.3)
+       rack
++    rack-test (0.6.2)
++      rack (>= 1.0)
++    shoulda-matchers (2.7.0)
++      activesupport (>= 3.0.0)
+     sinatra (1.4.5)
+       rack (~> 1.4)
+       rack-protection (~> 1.4)
+@@ -35,12 +49,16 @@ GEM
+     tilt (1.4.1)
+     tzinfo (1.2.2)
+       thread_safe (~> 0.1)
++    xpath (2.0.0)
++      nokogiri (~> 1.3)
+ 
+ PLATFORMS
+   ruby
+ 
+ DEPENDENCIES
+   activerecord
++  capybara
++  shoulda-matchers
+   sinatra
+   sinatra-activerecord
+   sinatra-flash
+diff --git a/lib/detail.rb b/lib/detail.rb
+index afd72e6..c08c6c2 100644
+--- a/lib/detail.rb
++++ b/lib/detail.rb
+@@ -5,6 +5,13 @@ class Detail < ActiveRecord::Base
+ 
+   DB = PG.connect({:dbname => 'deal_a_day'})
+ 
++  validates :purchaser_name, :presence => true
++  validates :description, :presence => true
++  validates :price, :presence => true
++  validates :amount, :presence => true
++  validates :address, :presence => true
++  validates :merchant_name, :presence => true
++
+   def self.upload(file)
+     File.open('uploads/' + file[:filename], "w") do |f|
+       f.write(file[:tempfile].read)
+diff --git a/spec/main_spec.rb b/spec/main_spec.rb
+new file mode 100644
+index 0000000..fa2dc09
+--- /dev/null
++++ b/spec/main_spec.rb
+@@ -0,0 +1,12 @@
++require 'spec_helper'
++
++describe Detail do
++
++  it { should validate_presence_of :purchaser_name }
++  it { should validate_presence_of :description }
++  it { should validate_presence_of :price }
++  it { should validate_presence_of :amount }
++  it { should validate_presence_of :address }
++  it { should validate_presence_of :merchant_name }
++  
++end
+\ No newline at end of file
+diff --git a/spec/spec_helper.rb b/spec/spec_helper.rb
+index 3159816..acad0ce 100644
+--- a/spec/spec_helper.rb
++++ b/spec/spec_helper.rb
+@@ -1,12 +1,5 @@
+-require 'rack/test'
++require './main'
++require 'shoulda-matchers'
++require 'capybara/rspec'
+ 
+-Dir.glob('./lib/*.rb').each { |f| require f }
+-
+-ENV['RACK_ENV'] = 'test'
+-
+-module RSpecMixin
+-  include Rack::Test::Methods
+-  def app() Sinatra::Application end
+-end
+-
+-RSpec.configure { |c| c.include RSpecMixin }
++Capybara.app = Sinatra::Application
+\ No newline at end of file
+-- 
+1.8.4
+

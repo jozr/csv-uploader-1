@@ -1,0 +1,22 @@
+From 007cbcd00ddcb3075a06c4e9316e16af4994b94e Mon Sep 17 00:00:00 2001
+From: jozwright <jozwright@gmail.com>
+Date: Mon, 1 Dec 2014 11:39:34 -0800
+Subject: [PATCH 02/23] add Rakefile
+
+---
+ Rakefile | 2 ++
+ 1 file changed, 2 insertions(+)
+ create mode 100644 Rakefile
+
+diff --git a/Rakefile b/Rakefile
+new file mode 100644
+index 0000000..a5db772
+--- /dev/null
++++ b/Rakefile
+@@ -0,0 +1,2 @@
++require './main'
++require 'sinatra/activerecord/rake'
+\ No newline at end of file
+-- 
+1.8.4
+
