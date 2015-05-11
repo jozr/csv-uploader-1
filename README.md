@@ -1,7 +1,6 @@
-Renewable Funding: Code Challenge
-=================================
-Josie Wright Edition
-====================
+CSV Uploader
+=============
+Novice attempt, kept for personal reference...
 
 ##Tools
 Ruby 2.1.2<br />
